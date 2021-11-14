@@ -56,7 +56,7 @@ static int se_ctx_releaseid(se_context_t *ctx, uint16_t id)
 		ctxmem->idlist = root;
 	}
 
-	ctxmem->idlist->ids[ctxmem->idlist++] = id;
+	ctxmem->idlist->ids[ctxmem->idlist->size++] = id;
 
 	return 0;
 }
