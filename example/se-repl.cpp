@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 
-#include "ee.c"
-#include "fnlib.c"
-#include "phead.c"
-#include "presult.c"
-#include "rout.cpp"
+#include "ee.c"      // 异常处理
+#include "fnlib.c"   // 内置函数库
+#include "phead.c"   // REPL初始信息显示
+#include "presult.c" // 求值结果打印
+#include "rout.cpp"  // 命令路由
 
 int main(int argc, char *argv[])
 {
