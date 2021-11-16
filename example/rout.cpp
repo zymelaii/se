@@ -21,7 +21,7 @@ int rout(se_context_t *ctx, const std::string &s)
 			printf(
 			"Simple Eval REPL v1.0.0 (beta) Powered by NPU ZYMelaii\n"
 			"Brief: SE-REPL is a simple REPL, builded with se library,\n"
-			"for calcuation of expressions compounded with numbers, arrays,\n"
+			"for calculation of expressions compounded with numbers, arrays,\n"
 			"arithmetic/bitwise/logical operators and function calls\n"
 			"Note: type :help for more information\n");
 			break;
@@ -36,7 +36,8 @@ int rout(se_context_t *ctx, const std::string &s)
 			"    :quit    - quit REPL\n"
 			"built-in function:\n"
 			"    id(x) sin(x) cos(x) tan(x) asin(x) acos(x) atan(x)\n"
-			"    exp(x) factorial(x) random() sum(...) mul(...)\n"
+			"    exp(x) factorial(x) int(x) random() sum(...) mul(...)\n"
+			"    floor(x) ceil(x)\n"
 			"array operation:\n"
 			"    declare:     a = { 1, 2, 3 }\n"
 			"    index:       b = a[1]\n"
@@ -66,7 +67,7 @@ int rout(se_context_t *ctx, const std::string &s)
 			"    or : a | b\n"
 			"    and: a & b\n"
 			"    xor: a ^ b\n"
-			"assign operators: = += -= *= /= %= |= &= ^= >>= <<=\n");
+			"assign operator: = += -= *= /= %= |= &= ^= >>= <<=\n");
 			break;
 		}
 		case 'c': // clear
@@ -74,6 +75,7 @@ int rout(se_context_t *ctx, const std::string &s)
 			system("cls");
 			break;
 		}
+		default: return 0;
 	}
 
 	return 2;

@@ -50,6 +50,45 @@ se_object_t sefnlib_id(se_stack_t *args)
 	return wrap2obj(ret, EO_NUM);
 }
 
+se_object_t sefnlib_int(se_stack_t *args)
+{
+	PICKNUM(x);
+	if (x.type == EN_FLT)
+	{
+		x.i = (int32_t)x.f;
+	}
+	x.type = EN_DEC;
+	se_number_t *ret;
+	se_ctx_savetmp(__CONTEXT__, &x, EO_NUM, (void**)&ret);
+	return wrap2obj(ret, EO_NUM);
+}
+
+se_object_t sefnlib_floor(se_stack_t *args)
+{
+	PICKNUM(x);
+	if (x.type == EN_FLT)
+	{
+		x.i = (int32_t)floor(x.f);
+	}
+	x.type = EN_DEC;
+	se_number_t *ret;
+	se_ctx_savetmp(__CONTEXT__, &x, EO_NUM, (void**)&ret);
+	return wrap2obj(ret, EO_NUM);
+}
+
+se_object_t sefnlib_ceil(se_stack_t *args)
+{
+	PICKNUM(x);
+	if (x.type == EN_FLT)
+	{
+		x.i = (int32_t)ceil(x.f);
+	}
+	x.type = EN_DEC;
+	se_number_t *ret;
+	se_ctx_savetmp(__CONTEXT__, &x, EO_NUM, (void**)&ret);
+	return wrap2obj(ret, EO_NUM);
+}
+
 se_object_t sefnlib_factorial(se_stack_t *args)
 {
 	PICKNUM(x);
@@ -61,14 +100,16 @@ se_object_t sefnlib_factorial(se_stack_t *args)
 		return wrap2obj(0L, EO_NIL);
 	}
 
-	long long result = 1;
+	double result = 1.;
 	for (int i = 2; i <= x.i; ++i)
 	{
 		result *= i;
 	}
 
 	se_number_t y = parse_flt_number(result);
-	se_number_t *ret; 
+	y.inf = isinf(y.f);
+
+	se_number_t *ret;
 	se_ctx_savetmp(__CONTEXT__, &y, EO_NUM, (void**)&ret);
 
 	return wrap2obj(ret, EO_NUM);
@@ -156,6 +197,9 @@ void import_all(se_context_t *ctx)
 }
 
 	IMPORT("id",   sefnlib_id,   1);
+	IMPORT("int",  sefnlib_int,  1);
+	IMPORT("floor",sefnlib_floor,1);
+	IMPORT("ceil", sefnlib_ceil, 1);
 	IMPORT("sin",  sefnlib_sin,  1);
 	IMPORT("cos",  sefnlib_cos,  1);
 	IMPORT("tan",  sefnlib_tan,  1);

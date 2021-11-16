@@ -7,6 +7,7 @@
 
 #include "ee.c"
 #include "fnlib.c"
+#include "phead.c"
 #include "presult.c"
 #include "rout.cpp"
 
@@ -17,6 +18,8 @@ int main(int argc, char *argv[])
 	se_context_t ctx;
 
 	se_ctx_create(&ctx);
+
+	show_repl_info();
 
 	const char *PROMPT = ">>> ";
 	std::string str;
