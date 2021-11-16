@@ -457,12 +457,129 @@ int se_ctx_savetmp(se_context_t *ctx, void *data, int type, void **pp)
 	return 0;
 }
 
-int se_ctx_bind(se_context_t *ctx, void *data, int type, const char *symbol); // 将数据绑定到对象
-int se_ctx_unbind(se_context_t *ctx, const char *symbol); // 对象解绑定
+// 将数据绑定到对象（未完成）
+int se_ctx_bind(se_context_t *ctx, void *data, int type, const char *symbol)
+{
+	assert(ctx != 0L);
 
+	ctxmemory_t *ctxmem = (ctxmemory_t*)ctx->memory;
+	assert(ctxmem != 0L);
+
+	if (symbol == 0L || data == 0L || type == EO_OBJ) return 1;
+
+	const int symlen = strlen(symbol);
+	if (symlen == 0)
+	{
+		return 1;
+	}
+
+	char *_symbol = (char*)se_ctx_request(ctx, symlen + 1);
+	if (_symbol == 0L)
+	{
+		se_throw(RuntimeError, BadAlloc, symlen + 1, 0);
+		return 1;
+	}
+
+	memcpy(_symbol, symbol, symlen);
+	_symbol[symlen] = '\0';
+
+	uint16_t symid, objid;
+
+	s2inode_t *pair = hashmap_find_by_key(&ctxmem->symmap, _symbol);
+	if (pair == 0L)
+	{
+		if (se_ctx_allocid(ctx, &symid) != 0)
+		{
+			se_throw(RuntimeError, NoAvailableID, ctxmem->prev_available_id, 0);
+			return 1;
+		}
+		hashmap_insert(&ctxmem->symmap, _symbol, symid);
+	} else
+	{
+		symid = pair->id;
+	}
+
+	if (se_ctx_allocid(ctx, &objid) != 0)
+	{
+		se_throw(RuntimeError, NoAvailableID, ctxmem->prev_available_id, 0);
+		return 1;
+	}
+
+	if (symid > ctxmem->idstorage_capacity)
+	{
+		const size_t size = sizeof(se_object_t) * ctxmem->idstorage_capacity;
+		se_object_t *idstorage = (se_object_t*)se_ctx_request(ctx, size * 2);
+		if (idstorage == 0L)
+		{
+			se_throw(RuntimeError, BadAlloc, size * 2, 0);
+			return 1;
+		}
+		ctxmem->idstorage_capacity *= 2;
+		memcpy(idstorage, ctxmem->idstorage, size);
+		memset(idstorage + ctxmem->idstorage_capacity, 0, size);
+		se_ctx_release(ctx, ctxmem->idstorage);
+		ctxmem->idstorage = idstorage;
+	}
+
+	void *obj_data;
+	if (se_ctx_savetmp(ctx, data, type, &obj_data) != 0)
+	{
+		return 1;
+	}
+
+	se_object_t *obj = (se_object_t*)se_ctx_request(ctx, sizeof(se_object_t));
+
+	obj->data   = obj_data;
+	obj->type   = type;
+	obj->id     = objid;
+	obj->refs   = 1;
+	obj->is_nil = 0;
+
+	se_object_t *p = &ctxmem->idstorage[symid - 1];
+	*p = wrap2obj(obj, EO_OBJ);
+	p->id = symid;
+	p->is_nil = 0;
+
+	return 0;
+}
+
+// 对象解绑定（未完成）
+int se_ctx_unbind(se_context_t *ctx, const char *symbol)
+{
+	assert(ctx != 0L);
+
+	ctxmemory_t *ctxmem = (ctxmemory_t*)ctx->memory;
+	assert(ctxmem != 0L);
+
+	if (symbol == 0L) return 1;
+
+	s2inode_t *pair = hashmap_find_by_key(&ctxmem->symmap, symbol);
+	if (pair == 0L)
+	{
+		return 1;
+	}
+
+	if (pair->id > ctxmem->idstorage_capacity)
+	{
+		return 1;
+	}
+
+	ctxmem->idstorage[pair->id].is_nil = 1;
+
+	hashmap_remove(&ctxmem->symmap, symbol);
+
+	return 0;
+}
+
+// 处理blc的废弃变量（待完成）
 int se_ctx_sweep(se_context_t *ctx)
 {
-	
+	assert(ctx != 0L);
+
+	ctxmemory_t *ctxmem = (ctxmemory_t*)ctx->memory;
+	assert(ctxmem != 0L);
+
+	return 0;
 }
 
 void* se_ctx_request(se_context_t *ctx, size_t size)

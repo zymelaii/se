@@ -6,22 +6,18 @@
 #include <string>
 
 #include "ee.c"
-#include "fnlib.c"
-#include "presult.c"
-#include "rout.cpp"
 
 int main(int argc, char *argv[])
 {
 	atexit(se_alloc_cleanup);
 
 	se_context_t ctx;
+	se_exception_t e;
 
 	se_ctx_create(&ctx);
 
 	const char *PROMPT = ">>> ";
 	std::string str;
-
-	import_all(&ctx);
 
 	while (true)
 	{
@@ -30,11 +26,6 @@ int main(int argc, char *argv[])
 		std::getline(std::cin, str);
 		if (std::cin.eof()) break;
 		if (str.empty()) continue;
-
-		int state = rout(&ctx, str);
-		if      (state == 0) ;
-		else if (state == 1) break;
-		else if (state == 2) continue;
 
 		se_ctx_load(&ctx, str.c_str());
 
@@ -49,7 +40,23 @@ int main(int argc, char *argv[])
 			se_ctx_execute(&ctx);
 			if (handle_exception()) continue;
 
-			se_ctx_print_result(&ctx);
+			char buf[256];
+			const se_object_t *ret = se_ctx_get_last_ret(&ctx);
+			if (ret != nullptr)
+			{
+				if (ret->type == EO_OBJ)
+				{
+					printf("{ id: %d, refs: %d } => %s\n",
+						ret->id, ret->refs,
+						obj2str(*(se_object_t*)ret->data, buf, 256));
+				} else
+				{
+					std::cout << obj2str(*ret, buf, 256) << std::endl;
+				}
+			} else
+			{
+				std::cout << "error: uncaught result" << std::endl;
+			}
 
 			se_ctx_sweep(&ctx);
 			handle_exception();

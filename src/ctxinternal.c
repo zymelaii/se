@@ -61,6 +61,7 @@ static int se_ctx_releaseid(se_context_t *ctx, uint16_t id)
 	return 0;
 }
 
+#include <stdio.h>
 // 标记对象生命周期结束
 static int se_ctx_mov2blc(se_context_t *ctx, se_object_t *obj)
 {

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-// ´ò°üÎªse_object_t
+// Â´Ã²Â°Ã¼ÃŽÂªse_object_t
 se_object_t wrap2obj(void *data, int type)
 {
 	se_object_t ret = { 0 };
@@ -66,12 +66,12 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 		case EO_OBJ:
 		{
 			se_object_t *oo = (se_object_t*)obj.data;
-			char reftype = '*'; // Ö»¶ÁÒýÓÃ
+			char reftype = '*'; // Ã–Â»Â¶ÃÃ’Ã½Ã“Ãƒ
 
 			if (oo->type == EO_OBJ)
 			{
 				oo = (se_object_t*)oo->data;
-				reftype = '&'; // ¶ÁÐ´ÒýÓÃ
+				reftype = '&'; // Â¶ÃÃÂ´Ã’Ã½Ã“Ãƒ
 			}
 
 			assert(obj.data != 0L);
@@ -117,8 +117,8 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 		case EO_NUM:
 		{
 			se_number_t *num = (se_number_t*)obj.data;
-			if (num->nan) return strncpy(buffer, "NaN", len);
 			if (num->inf) return strncpy(buffer, "Inf", len);
+			if (num->nan) return strncpy(buffer, "NaN", len);
 			if (num->type == EN_FLT)
 			{
 				sprintf(p, "%g", num->f);

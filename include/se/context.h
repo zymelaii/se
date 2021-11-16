@@ -36,13 +36,13 @@ int se_ctx_load    (se_context_t *ctx, const char *script); // 载入SE代码（
 int se_ctx_complete(se_context_t *ctx); // 判断代码是否全部执行完毕
 int se_ctx_forward (se_context_t *ctx); // 读取下一个语句
 int se_ctx_parse   (se_context_t *ctx); // 解析当前语句并构建SEUS
-int se_ctx_compile (se_context_t *ctx); // 编译全部代码
+int se_ctx_compile (se_context_t *ctx); // 编译全部代码（未实现）
 int se_ctx_onestep (se_context_t *ctx, unit_t *unit); // 单步执行
 int se_ctx_execute (se_context_t *ctx); // 执行SEUS
 int se_ctx_savetmp (se_context_t *ctx, void *data, int type, void **pp); // 保存临时值
 int se_ctx_bind    (se_context_t *ctx, void *data, int type, const char *symbol); // 将数据绑定到对象
 int se_ctx_unbind  (se_context_t *ctx, const char *symbol); // 对象解绑定
-int se_ctx_sweep   (se_context_t *ctx); // 清理内存
+int se_ctx_sweep   (se_context_t *ctx); // 清理内存（未实现）
 
 void* se_ctx_request(se_context_t *ctx, size_t size); // 请求一块内存
 void  se_ctx_release(se_context_t *ctx, void *ptr);   // 释放从se_ctx_request请求的内存

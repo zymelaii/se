@@ -177,7 +177,12 @@ static int se_ctx_action_bracketval(se_context_t *ctx, unit_t *unit)
 		se_stack_push(&ctxmem->efs, wrap2obj(0L, EO_NIL));
 	} else
 	{
+		int c = ctxmem->vfs.size;
 		ctxmem->vfs.size -= state->accept;
+		for (; c > ctxmem->vfs.size; --c)
+		{
+			se_ctx_mov2blc(ctx, &ctxmem->vfs.stack[c - 1]);
+		}
 	}
 
 	return 0;
@@ -223,6 +228,11 @@ static int se_ctx_action_fncall(se_context_t *ctx, unit_t *unit)
 		se_object_t ret = se_call(fn, &args);
 
 		se_stack_push(&ctxmem->efs, ret);
+
+		for (int c = 0; c < args.size; ++c)
+		{
+			se_ctx_mov2blc(ctx, &args.stack[c]);
+		}
 
 		return !se_caught();
 	} else
@@ -482,7 +492,7 @@ static int se_ctx_action_mov2vfs(se_context_t *ctx, unit_t *unit)
 }
 
 static int se_ctx_action_exparray(se_context_t *ctx, unit_t *unit)
-{	// 数组解构
+{	// 数组解构（待实现）
 	assert(ctx != 0L);
 	assert(unit != 0L);
 	assert(SE_UNIT_TYPE(*unit) == T_OPERATOR);
@@ -490,6 +500,34 @@ static int se_ctx_action_exparray(se_context_t *ctx, unit_t *unit)
 
 	ctxmemory_t *ctxmem = (ctxmemory_t*)ctx->memory;
 	assert(ctxmem != 0L);
+
+	se_object_t lhs = se_stack_pop(&ctxmem->efs), *obj = &lhs;
+
+	while (obj->type == EO_OBJ)
+	{
+		obj = (se_object_t*)obj->data;
+	}
+
+	if (obj->type != EO_ARRAY)
+	{
+		se_throw(TypeError, NonExpandableObject, obj->type, 0);
+		return 1;
+	}
+
+	se_array_t *array = (se_array_t*)obj->data;
+	if (array->size == 0)
+	{
+		se_throw(RuntimeError, ExpandEmptyArray, 0, 0);
+		return 1;
+	}
+
+	scopestate_t *state = &ctx->seus.ss[ctxmem->ssp];
+	se_stack_push(&ctxmem->efs, array->data[array->size - 1]);
+	for (int c = 0; c < array->size - 1; ++c)
+	{
+		se_stack_push(&ctxmem->vfs, array->data[c]);
+	}
+	state->accept += array->size - 1;
 
 	return 0;
 }
