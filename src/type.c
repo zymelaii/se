@@ -181,8 +181,8 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 		case EO_NUM:
 		{
 			se_number_t *num = (se_number_t*)obj.data;
-			if (num->inf) return strncpy(buffer, "Inf", len);
 			if (num->nan) return strncpy(buffer, "NaN", len);
+			if (num->inf) return strncpy(buffer, "Inf", len);
 			if (num->type == EN_FLT)
 			{
 				sprintf(p, "%g", num->f);
