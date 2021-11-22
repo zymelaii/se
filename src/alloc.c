@@ -335,5 +335,12 @@ void se_free(void *pb)
 size_t se_msize(void *pb)
 {
 	return g_current_allocator == 0
-		? _msize(pb) : se_msize_by_allocator(pb);
+#ifdef _WIN32
+		? _msize(pb)
+#elif defined(__linux__)
+		? malloc_usable_size(pb)
+#else
+#	error Unsupport OS for se Library
+#endif
+		: se_msize_by_allocator(pb);
 }

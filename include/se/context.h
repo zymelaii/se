@@ -4,6 +4,7 @@
 #include <se/priority.h>
 #include <se/parser.h>
 #include <se/exception.h>
+#include <stddef.h>
 
 #define ECTX_UNLOAD  0 // seus指令未加载
 #define ECTX_UNBUILD 1 // seus指令未构建

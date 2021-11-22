@@ -2,6 +2,7 @@
 
 #include <se/type.h>
 #include <se/priority.h>
+#include <stddef.h>
 
 // 说明：
 // 1. se的内存分配包括字面量与对象

@@ -2,6 +2,7 @@
 
 #include <se/token.h>
 #include <stdint.h>
+#include <stddef.h>
 
 // eNumber
 #define EN_BIN T_NUM_BIN

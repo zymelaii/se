@@ -6,6 +6,70 @@
 #include <stdlib.h>
 #include <assert.h>
 
+static char* convl2a(int32_t i, char *buf, int radix)
+{
+#ifdef _WIN32
+	ltoa(i, buf, radix);
+	return buf;
+#elif defined(__linux__)
+	assert(radix == 2 || radix == 8
+		|| radix == 10 || radix == 16);
+	char tmp[33], *p = tmp + 31;
+	p[1] = '\0';
+	if (radix == 10)
+	{
+		if (i == 0)
+		{
+			buf[0] = '0';
+			buf[1] = '\0';
+			return buf;
+		}
+		p = buf;
+		int sgn = i >= 0;
+		uint32_t t = sgn ? i : -i;
+		while (t > 0)
+		{
+			*p-- = t % 10 + '0';
+			t /= 10;
+		}
+		if (sgn == 0)
+		{
+			*p = '-';
+		} else
+		{
+			++p;
+		}
+		strcpy(buf, p);
+		return buf;
+	}
+	uint8_t mask, shift;
+	switch (radix)
+	{
+		case 2:  mask = 0x1, shift = 1; break;
+		case 8:  mask = 0x7, shift = 3; break;
+		case 16: mask = 0xf, shift = 4; break;
+	}
+	if (i == 0)
+	{
+		*p-- = '0';
+	} else
+	{
+		const char *hex = "0123456789abcdef";
+		uint32_t t = *(uint32_t*)&i;
+		while (t > 0)
+		{
+			int tt = t & mask;
+			*p-- = radix == 16 ? hex[tt] : tt + '0';
+			t >>= shift;
+		}
+	}
+	strcpy(buf, ++p);
+	return buf;
+#else
+#	error Unsupport OS for se Library
+#endif
+}
+
 // ´ò°üÎªse_object_t
 se_object_t wrap2obj(void *data, int type)
 {
@@ -106,7 +170,7 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 				case EO_ARRAY:
 				{
 					se_array_t *ar = (se_array_t*)oo->data;
-					sprintf(buf, "Object<Array<%d>%c%d>", ar->size, reftype, oo->refs);
+					sprintf(buf, "Object<Array<%ld>%c%d>", ar->size, reftype, oo->refs);
 				}
 				break;
 				default: assert(0);
@@ -132,7 +196,7 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 				case EN_DEC: radix = 10; break;
 				case EN_HEX: radix = 16; *p++ = '0'; *p++ = 'x'; break;
 			}
-			ltoa(num->i, p, radix);
+			convl2a(num->i, p, radix);
 			return strncpy(buffer, buf, len);
 		}
 		break;
@@ -154,7 +218,7 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 		case EO_ARRAY:
 		{
 			se_array_t *ar = (se_array_t*)obj.data;
-			snprintf(buffer, len, "Array<%d>", ar->size);
+			snprintf(buffer, len, "Array<%ld>", ar->size);
 
 			if (ar->size == 0) return buffer;
 
@@ -174,7 +238,7 @@ const char* obj2str(se_object_t obj, char *buffer, int len)
 
 				if (obj->type == EO_ARRAY)
 				{
-					sprintf(buf, "Array<%d>", ((se_array_t*)obj->data)->size);
+					sprintf(buf, "Array<%ld>", ((se_array_t*)obj->data)->size);
 				} else
 				{
 					obj2str(*obj, buf, 64);

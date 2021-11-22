@@ -5,6 +5,7 @@
 #include <se/stack.h>
 #include <se/exception.h>
 #include <stdint.h>
+#include <stddef.h>
 
 typedef se_object_t(*se_fncall_t)(se_stack_t*);
 

@@ -2,6 +2,7 @@
 
 #include <se/type/object.h>
 #include <stdint.h>
+#include <stddef.h>
 
 // 1. se_stack_t用alloc.h提供的方法进行内存分配，
 // 务必确保se_stack_t的创建、使用与销毁在同一分配器环境下

@@ -49,7 +49,7 @@ int rout(se_context_t *ctx, const std::string &s)
 			"    sub: a - b\n"
 			"    mul: a * b\n"
 			"    div: a / b\n"
-			"    mod: a % b\n"
+			"    mod: a %% b\n"
 			"logical operator:\n"
 			"    not: !a\n"
 			"    gtr: a > b\n"
@@ -67,12 +67,20 @@ int rout(se_context_t *ctx, const std::string &s)
 			"    or : a | b\n"
 			"    and: a & b\n"
 			"    xor: a ^ b\n"
-			"assign operator: = += -= *= /= %= |= &= ^= >>= <<=\n");
+			"assign operator: = += -= *= /= %%= |= &= ^= >>= <<=\n");
 			break;
 		}
 		case 'c': // clear
 		{
-			system("cls");
+			int retcode = system(
+#ifdef _WIN32
+			"cls"
+#elif defined(__linux__)
+			"clear"
+#else
+#	error Unsupport OS for se Library
+#endif
+			);
 			break;
 		}
 		default: return 0;

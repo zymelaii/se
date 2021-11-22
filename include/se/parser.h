@@ -5,6 +5,7 @@
 #include <se/type.h>
 #include <se/priority.h>
 #include <se/exception.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <assert.h>
 

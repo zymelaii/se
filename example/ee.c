@@ -35,8 +35,8 @@ bool handle_exception()
 		std::cout << "RuntimeError: " << serror[e.error - 1] << std::endl;
 	} else if (se_catch_any(&e))
 	{
-		printf("UncaughtException: CustomError(%d): extra=0x%016x reserved=0x%16x",
-			e.error - CustomError, e.extra, e.reserved);
+		printf("UncaughtException: CustomError(%d): extra=0x%016llx reserved=0x%16llx",
+			e.error - CustomError, (long long unsigned int)e.extra, (long long unsigned int)e.reserved);
 	}
 	return true;
 }

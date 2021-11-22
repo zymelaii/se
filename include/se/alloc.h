@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdint.h>
 
 // 1. 下列内存管理函数是针对se特化的内存池版本
