@@ -1,0 +1,2 @@
+D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ar.exe qc ..\..\..\lib\libgtest.a "CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
+D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ranlib.exe ..\..\..\lib\libgtest.a

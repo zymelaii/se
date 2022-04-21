@@ -1,0 +1,2 @@
+D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ar.exe qc libse.a CMakeFiles/se.dir/type/array.c.obj CMakeFiles/se.dir/type/function.c.obj CMakeFiles/se.dir/type/number.c.obj CMakeFiles/se.dir/type/object.c.obj CMakeFiles/se.dir/type.c.obj CMakeFiles/se.dir/ref.c.obj CMakeFiles/se.dir/exception.c.obj CMakeFiles/se.dir/priority.c.obj CMakeFiles/se.dir/token.c.obj CMakeFiles/se.dir/alloc.c.obj CMakeFiles/se.dir/stack.c.obj CMakeFiles/se.dir/parser.c.obj CMakeFiles/se.dir/context.c.obj
+D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ranlib.exe libse.a
