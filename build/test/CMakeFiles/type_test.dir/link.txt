@@ -1,3 +1,0 @@
-D:\EnvrSupport\cmake-3.23.1-windows-x86_64\bin\cmake.exe -E rm -f CMakeFiles\type_test.dir/objects.a
-D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ar.exe qc CMakeFiles\type_test.dir/objects.a @CMakeFiles\type_test.dir\objects1.rsp
-D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\g++.exe -Wl,--whole-archive CMakeFiles\type_test.dir/objects.a -Wl,--no-whole-archive -o type_test.exe -Wl,--out-implib,libtype_test.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\type_test.dir\linklibs.rsp

@@ -1,2 +1,0 @@
-D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ar.exe qc ..\..\..\lib\libgmock.a "CMakeFiles/gmock.dir/src/gmock-all.cc.obj"
-D:\EnvrSupport\gcc-11.2.0-mingw-w64ucrt-9.0.0-r5\bin\ranlib.exe ..\..\..\lib\libgmock.a
